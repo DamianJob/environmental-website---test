@@ -1,33 +1,34 @@
-const sheetURL = 'https://script.google.com/macros/s/AKfycbw1_DouVkEwTJw1OzbVc4uLZjQe5qTPzJ7BdgkPUw8L-jMmzTfDzsQhgB3TPcEHBaa1/exec';
+const sheetURL = 'https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_URL/exec';
 let dataByZip = {};
 
 window.onload = async function() {
   try {
-    const res = await fetch('https://docs.google.com/spreadsheets/d/1YWaAKQLV3lmYKX21VSDVO-cL7_ICNSn-0tB-1Ru3zWg/edit?gid=0#gid=0');
+    const res = await fetch(sheetURL);
     dataByZip = await res.json();
-
-    const zipDropdown = document.getElementById("zipcode");
-    const zipcodes = Object.keys(dataByZip).sort();
-
-    zipcodes.forEach(zip => {
-      const option = document.createElement("option");
-      option.value = zip;
-      option.textContent = zip;
-      zipDropdown.appendChild(option);
-    });
   } catch (error) {
     console.error("Failed to load data:", error);
   }
 };
 
-function fetchDataByZip() {
-  const selectedZip = document.getElementById("zipcode").value;
+function handleZipInput() {
+  const zipInput = document.getElementById("zipcode").value;
+  if (zipInput.length === 5 && /^\d{5}$/.test(zipInput)) {
+    fetchDataByZip(zipInput);
+  } else {
+    document.getElementById("results").innerHTML = ""; // Clear output if ZIP is invalid or incomplete
+  }
+}
+
+function fetchDataByZip(zip) {
   const container = document.getElementById("results");
   container.innerHTML = "";
 
-  if (!selectedZip || !dataByZip[selectedZip]) return;
+  if (!zip || !dataByZip[zip]) {
+    container.innerHTML = `<p>No data found for ZIP Code: ${zip}</p>`;
+    return;
+  }
 
-  dataByZip[selectedZip].forEach(site => {
+  dataByZip[zip].forEach(site => {
     const siteBox = document.createElement("div");
     siteBox.className = "site-box";
 
