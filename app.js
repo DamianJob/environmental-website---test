@@ -66,5 +66,30 @@ function fetchDataByZip(zip) {
     `;
 
     container.appendChild(siteBox);
+
+    // Blinking question
+    const blinking = document.createElement("p");
+    blinking.className = "blinking";
+    blinking.textContent = "Now that you know what is in your water after utilizing the above information, what are you recommended to do??";
+    container.appendChild(blinking);
+
+    // Add mitigation boxes if available
+    for (let i = 1; i <= 9; i++) {
+      const chem = site[`CHEMICAL ${i}`];
+      const mitigation = site[`MITIGATION ${i}`];
+
+      if (chem && mitigation) {
+        const mitigationBox = document.createElement("div");
+        mitigationBox.className = "site-box"; // same style as site box
+
+        mitigationBox.innerHTML = `
+          <strong>For "${chem}"</strong><br/>
+          The following is recommended:<br/>
+          <em>${mitigation}</em>
+        `;
+
+        container.appendChild(mitigationBox);
+      }
+    }
   });
 }
