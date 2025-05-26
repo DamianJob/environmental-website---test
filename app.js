@@ -1,9 +1,9 @@
-const sheetURL = 'https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_URL/exec';
+const sheetURL = 'https://script.google.com/macros/s/AKfycbw1_DouVkEwTJw1OzbVc4uLZjQe5qTPzJ7BdgkPUw8L-jMmzTfDzsQhgB3TPcEHBaa1/exec';
 let dataByZip = {};
 
 window.onload = async function() {
   try {
-    const res = await fetch(sheetURL);
+    const res = await fetch('https://docs.google.com/spreadsheets/d/1YWaAKQLV3lmYKX21VSDVO-cL7_ICNSn-0tB-1Ru3zWg/edit?gid=0#gid=0');
     dataByZip = await res.json();
   } catch (error) {
     console.error("Failed to load data:", error);
