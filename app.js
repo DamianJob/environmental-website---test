@@ -1,6 +1,6 @@
 // Replace this URL with your actual deployed Google Apps Script URL
 const sheetURL =
-  "https://script.google.com/macros/s/AKfycbxquuRV5a8YREXjXAKlj4ZjL_R_1TuSrJaAzLC7EXDzfxlR0OV2H1IxXftextXP5t9m/exec"
+  "https://script.google.com/macros/s/AKfycbxpvaF85LIKRfEGekJnSeIpDPu44QaYvNVr9tWl8WjQcNe1wFqro5yALP6bJRaU1yHa/exec"
 let dataByZip = {}
 let dataLoaded = false
 
@@ -181,4 +181,41 @@ function fetchDataByZip(zip) {
   blinking.textContent =
     "Now that you know what is in your water after utilizing the above information, what are you recommended to do??"
   container.appendChild(blinking)
+
+  // Collect all unique chemicals and their mitigations from all sites in this ZIP code
+  const chemicalMitigations = new Map()
+
+  dataByZip[zip].forEach((site) => {
+    // Check chemicals 1 through 9
+    for (let i = 1; i <= 9; i++) {
+      const chemical = site[`CHEMICAL ${i}`] || site[`CHEMICAL${i}`]
+      const mitigation = site[`MITIGATION ${i}`] || site[`MITIGATION${i}`]
+
+      if (chemical && chemical.trim() && mitigation && mitigation.trim()) {
+        const chemName = chemical.trim()
+        const mitigationText = mitigation.trim()
+
+        // Store the mitigation (use the first one found if there are duplicates)
+        if (!chemicalMitigations.has(chemName)) {
+          chemicalMitigations.set(chemName, mitigationText)
+        }
+      }
+    }
+  })
+
+  // Display mitigation boxes for each chemical found
+  if (chemicalMitigations.size > 0) {
+    chemicalMitigations.forEach((mitigation, chemical) => {
+      const mitigationBox = document.createElement("div")
+      mitigationBox.className = "site-box"
+
+      mitigationBox.innerHTML = `
+        <strong>For "${chemical}"</strong><br/>
+        The following is recommended:<br/>
+        <em>${mitigation}</em>
+      `
+
+      container.appendChild(mitigationBox)
+    })
+  }
 }
