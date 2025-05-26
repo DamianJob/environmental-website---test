@@ -3,19 +3,24 @@ let dataByZip = {};
 
 window.onload = async function() {
   try {
-    const res = await fetch('https://docs.google.com/spreadsheets/d/1YWaAKQLV3lmYKX21VSDVO-cL7_ICNSn-0tB-1Ru3zWg/edit?gid=0#gid=0');
+    console.log("🔄 Fetching data from Google Apps Script...");
+    const res = await fetch(sheetURL);
     dataByZip = await res.json();
+    console.log("✅ Data loaded successfully:", dataByZip);
   } catch (error) {
-    console.error("Failed to load data:", error);
+    console.error("❌ Failed to load data:", error);
   }
 };
 
 function handleZipInput() {
-  const zipInput = document.getElementById("zipcode").value;
+  const zipInput = document.getElementById("zipcode").value.trim();
+  console.log("📥 ZIP code entered:", zipInput);
+
   if (zipInput.length === 5 && /^\d{5}$/.test(zipInput)) {
     fetchDataByZip(zipInput);
   } else {
-    document.getElementById("results").innerHTML = ""; // Clear output if ZIP is invalid or incomplete
+    console.warn("⚠️ Invalid ZIP Code format");
+    document.getElementById("results").innerHTML = ""; // Clear output if ZIP is invalid
   }
 }
 
@@ -24,9 +29,12 @@ function fetchDataByZip(zip) {
   container.innerHTML = "";
 
   if (!zip || !dataByZip[zip]) {
+    console.warn(`❗ No data found for ZIP Code: ${zip}`);
     container.innerHTML = `<p>No data found for ZIP Code: ${zip}</p>`;
     return;
   }
+
+  console.log(`📦 Rendering data for ZIP Code: ${zip}`, dataByZip[zip]);
 
   dataByZip[zip].forEach(site => {
     const siteBox = document.createElement("div");
@@ -38,7 +46,7 @@ function fetchDataByZip(zip) {
       <strong>SITE NAME:</strong> ${site["MAILINGNAME"]}<br/>
       <strong>CHEMICALS PRESENT:</strong> ${chemicals.join(", ") || "None"}<br/>
       <strong>MICROBIOLOGY STATUS:</strong> ${site["MICROBIOLOGY"] || "Not reported"}<br/><br/>
-
+      
       <strong>SITE CONTACT</strong><br/>
       <strong>ADDRESS:</strong> ${site["ADDRESS1"]}<br/>
       <strong>CITY:</strong> ${site["CITY"]}<br/>
