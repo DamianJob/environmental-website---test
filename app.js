@@ -11,7 +11,7 @@ window.onload = async () => {
   console.log("📍 URL:", sheetURL)
 
   // Check if URL looks correct
-  if (!sheetURL.includes("script.google.com/macros/s/") || sheetURL === "YOUR_NEW_DEPLOYMENT_URL_HERE") {
+  if (!sheetURL.includes("script.google.com/macros/s/") || sheetURL === "https://script.google.com/macros/s/AKfycbxR1850IBDw2U_Dm_f2cU3HfDxNxfL60ixpRSsIPvAzHxIYaioYjphJJcs_mtNQLEyG/exec") {
     showError("❌ Please update the sheetURL in app.js with your actual Google Apps Script deployment URL")
     showLoading(false)
     return
