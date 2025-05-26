@@ -1,10 +1,10 @@
 const sheetURL = 'https://script.google.com/macros/s/AKfycbxcFC3tWiSiXIitW8utpL64OlVd-HOSN4gYLSYkqFJGEHfNL913b1RpbTi_Qf1m9D-L/exec';
 let dataByZip = {};
 
-window.onload = async function() {
+window.onload = async function () {
   try {
     console.log("🔄 Fetching data from Google Apps Script...");
-    const res = await fetch(https://docs.google.com/spreadsheets/d/1YWaAKQLV3lmYKX21VSDVO-cL7_ICNSn-0tB-1Ru3zWg/edit?gid=0#gid=0);
+    const res = await fetch(sheetURL); // ✅ Fixed line here
     dataByZip = await res.json();
     console.log("✅ Data loaded successfully:", dataByZip);
   } catch (error) {
@@ -20,7 +20,7 @@ function handleZipInput() {
     fetchDataByZip(zipInput);
   } else {
     console.warn("⚠️ Invalid ZIP Code format");
-    document.getElementById("results").innerHTML = ""; // Clear output if ZIP is invalid
+    document.getElementById("results").innerHTML = "";
   }
 }
 
