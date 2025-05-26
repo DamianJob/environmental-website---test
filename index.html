@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Water Quality Status</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>FLORIDA AGRICULTURAL AND MECHANICAL UNIVERSITY</h1>
+    <h2>College of Pharmacy and Pharmaceutical Science</h2>
+    <h3>Institute of Public Health</h3>
+
+    <p class="glow">💡 Have you ever wondered what is the status of water quality around your area?</p>
+    <div class="emoji">🤔</div>
+
+    <label for="zipcode">Select Your ZIP Code:</label>
+    <select id="zipcode" onchange="fetchDataByZip()">
+      <option value="">--Choose ZIP Code--</option>
+    </select>
+
+    <div id="results" class="results-container"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
