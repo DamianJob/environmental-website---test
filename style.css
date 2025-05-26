@@ -56,3 +56,19 @@ select {
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
+
+.blinking {
+  animation: blinker 1.5s linear infinite;
+  color: red;
+  font-weight: bold;
+  margin-top: 20px;
+  font-size: 18px;
+  text-align: center;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
