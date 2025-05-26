@@ -18,6 +18,8 @@
     <label for="zipcode">Enter Your ZIP Code:</label>
     <input type="text" id="zipcode" maxlength="5" pattern="\d{5}" placeholder="e.g., 32301" oninput="handleZipInput()" />
 
+    <div id="loading" class="loading hidden">Loading data...</div>
+    <div id="error" class="error hidden"></div>
     <div id="results" class="results-container"></div>
   </div>
 
