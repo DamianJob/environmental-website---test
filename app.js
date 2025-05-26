@@ -4,7 +4,7 @@ let dataByZip = {};
 window.onload = async function() {
   try {
     console.log("🔄 Fetching data from Google Apps Script...");
-    const res = await fetch(sheetURL);
+    const res = await fetch(https://docs.google.com/spreadsheets/d/1YWaAKQLV3lmYKX21VSDVO-cL7_ICNSn-0tB-1Ru3zWg/edit?gid=0#gid=0);
     dataByZip = await res.json();
     console.log("✅ Data loaded successfully:", dataByZip);
   } catch (error) {
