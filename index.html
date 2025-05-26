@@ -15,10 +15,8 @@
     <p class="glow">💡 Have you ever wondered what is the status of water quality around your area?</p>
     <div class="emoji">🤔</div>
 
-    <label for="zipcode">Select Your ZIP Code:</label>
-    <select id="zipcode" onchange="fetchDataByZip()">
-      <option value="">--Choose ZIP Code--</option>
-    </select>
+    <label for="zipcode">Enter Your ZIP Code:</label>
+    <input type="text" id="zipcode" maxlength="5" pattern="\d{5}" placeholder="e.g., 32301" oninput="handleZipInput()" />
 
     <div id="results" class="results-container"></div>
   </div>
