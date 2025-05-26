@@ -1,6 +1,6 @@
 // Replace this URL with your actual deployed Google Apps Script URL
 const sheetURL =
-  "https://script.google.com/macros/s/AKfycbxpvaF85LIKRfEGekJnSeIpDPu44QaYvNVr9tWl8WjQcNe1wFqro5yALP6bJRaU1yHa/exec"
+  "https://script.google.com/macros/s/AKfycbxquuRV5a8YREXjXAKlj4ZjL_R_1TuSrJaAzLC7EXDzfxlR0OV2H1IxXftextXP5t9m/exec"
 let dataByZip = {}
 let dataLoaded = false
 
