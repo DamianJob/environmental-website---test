@@ -1,4 +1,4 @@
-const sheetURL = 'https://script.google.com/macros/s/AKfycbxcFC3tWiSiXIitW8utpL64OlVd-HOSN4gYLSYkqFJGEHfNL913b1RpbTi_Qf1m9D-L/exec';
+const sheetURL = 'https://script.google.com/macros/s/AKfycbxpvaF85LIKRfEGekJnSeIpDPu44QaYvNVr9tWl8WjQcNe1wFqro5yALP6bJRaU1yHa/exec';
 let dataByZip = {};
 
 window.onload = async function () {
