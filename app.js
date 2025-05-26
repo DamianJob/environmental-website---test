@@ -1,26 +1,38 @@
-// Replace this URL with your actual deployed Google Apps Script URL
-const sheetURL =
-  "https://script.google.com/macros/s/AKfycbxquuRV5a8YREXjXAKlj4ZjL_R_1TuSrJaAzLC7EXDzfxlR0OV2H1IxXftextXP5t9m/exec"
+// IMPORTANT: Replace this URL with your NEW deployment URL from Step 1
+const sheetURL = "https://script.google.com/macros/s/AKfycbxR1850IBDw2U_Dm_f2cU3HfDxNxfL60ixpRSsIPvAzHxIYaioYjphJJcs_mtNQLEyG/exec"
 let dataByZip = {}
 let dataLoaded = false
 
 window.onload = async () => {
   showLoading(true)
+
+  // First, let's test if the URL is accessible
+  console.log("🔄 Testing Google Apps Script URL...")
+  console.log("📍 URL:", sheetURL)
+
+  // Check if URL looks correct
+  if (!sheetURL.includes("script.google.com/macros/s/") || sheetURL === "YOUR_NEW_DEPLOYMENT_URL_HERE") {
+    showError("❌ Please update the sheetURL in app.js with your actual Google Apps Script deployment URL")
+    showLoading(false)
+    return
+  }
+
   try {
     console.log("🔄 Fetching data from Google Apps Script...")
-    console.log("📍 URL:", sheetURL)
 
     const res = await fetch(sheetURL, {
       method: "GET",
+      mode: "cors", // Explicitly set CORS mode
       headers: {
         Accept: "application/json",
       },
     })
 
     console.log("📊 Response status:", res.status)
+    console.log("📊 Response ok:", res.ok)
 
     if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`)
+      throw new Error(`HTTP error! status: ${res.status} - ${res.statusText}`)
     }
 
     const responseText = await res.text()
@@ -33,11 +45,6 @@ window.onload = async () => {
       if (parsedData.error) {
         console.error("❌ Server returned error:", parsedData)
         showError(`Server error: ${parsedData.message}`)
-
-        // Show additional debug info if available
-        if (parsedData.spreadsheetInfo) {
-          console.log("📊 Spreadsheet info:", parsedData.spreadsheetInfo)
-        }
         return
       }
 
@@ -62,7 +69,18 @@ window.onload = async () => {
     }
   } catch (error) {
     console.error("❌ Failed to load data:", error)
-    showError(`Failed to load data: ${error.message}. Please check if the Google Apps Script is deployed correctly.`)
+
+    // Provide more specific error messages
+    if (error.message.includes("Failed to fetch")) {
+      showError(`❌ Cannot connect to Google Apps Script. Please check:
+      1. Is your script deployed as a web app?
+      2. Is access set to "Anyone"?
+      3. Is the URL correct?
+      
+      Current URL: ${sheetURL}`)
+    } else {
+      showError(`Failed to load data: ${error.message}`)
+    }
   } finally {
     showLoading(false)
   }
@@ -80,7 +98,7 @@ function showLoading(show) {
 function showError(message) {
   const errorEl = document.getElementById("error")
   if (message) {
-    errorEl.textContent = message
+    errorEl.innerHTML = message.replace(/\n/g, "<br>") // Allow line breaks in error messages
     errorEl.classList.remove("hidden")
   } else {
     errorEl.classList.add("hidden")
