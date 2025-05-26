@@ -1,6 +1,6 @@
 // Replace this URL with your actual deployed Google Apps Script URL
 const sheetURL =
-  "https://script.google.com/macros/s/AKfycbxZ9hn2xGaumTKInXZptojNV2KYYTsyFKAon-QwzC1la_dz0fva183VhCwHQ_74Qbw5/exec"
+  "https://script.google.com/macros/s/AKfycbyQVKSIFFpFP0CLvwk8E9wFnVziQe269AlcmODo3yeZAI2An0_0Rkffhtdyqc82anE/exec"
 let dataByZip = {}
 let dataLoaded = false
 
@@ -18,24 +18,46 @@ window.onload = async () => {
     })
 
     console.log("📊 Response status:", res.status)
-    console.log("📊 Response headers:", res.headers)
 
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`)
     }
 
     const responseText = await res.text()
-    console.log("📄 Raw response:", responseText.substring(0, 200) + "...")
+    console.log("📄 Raw response (first 500 chars):", responseText.substring(0, 500))
 
     try {
-      dataByZip = JSON.parse(responseText)
+      const parsedData = JSON.parse(responseText)
+
+      // Check if the response is an error
+      if (parsedData.error) {
+        console.error("❌ Server returned error:", parsedData)
+        showError(`Server error: ${parsedData.message}`)
+
+        // Show additional debug info if available
+        if (parsedData.spreadsheetInfo) {
+          console.log("📊 Spreadsheet info:", parsedData.spreadsheetInfo)
+        }
+        return
+      }
+
+      dataByZip = parsedData
       console.log("✅ Data loaded successfully")
       console.log("📈 Number of ZIP codes:", Object.keys(dataByZip).length)
       console.log("🔍 Sample ZIP codes:", Object.keys(dataByZip).slice(0, 5))
+
+      if (Object.keys(dataByZip).length === 0) {
+        showError(
+          "No data found in the spreadsheet. Please check if the spreadsheet contains data and the ZIP code column is named correctly.",
+        )
+        return
+      }
+
       dataLoaded = true
       showError("")
     } catch (parseError) {
       console.error("❌ JSON parsing error:", parseError)
+      console.log("📄 Response that failed to parse:", responseText)
       showError("Failed to parse data from server. The response might not be valid JSON.")
     }
   } catch (error) {
@@ -104,12 +126,12 @@ function fetchDataByZip(zip) {
       Searched ZIP: ${zip}<br/>
       Data loaded: ${dataLoaded}<br/>
       Total ZIP codes in data: ${Object.keys(dataByZip).length}<br/>
-      Sample ZIP codes: ${Object.keys(dataByZip).slice(0, 10).join(", ")}
+      Available ZIP codes: ${Object.keys(dataByZip).join(", ") || "None"}
     `
     container.appendChild(debugInfo)
 
     container.innerHTML += `<p><strong>No data found for ZIP Code: ${zip}</strong></p>
-                           <p>Please try a different ZIP code or contact support if you believe this ZIP code should have data.</p>`
+                           <p>Available ZIP codes: ${Object.keys(dataByZip).join(", ") || "None"}</p>`
     return
   }
 
