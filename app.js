@@ -4,7 +4,7 @@ let dataByZip = {};
 window.onload = async function () {
   try {
     console.log("🔄 Fetching data from Google Apps Script...");
-    const res = await fetch(sheetURL); // ✅ Fixed line here
+    const res = await fetch(sheetURL);
     dataByZip = await res.json();
     console.log("✅ Data loaded successfully:", dataByZip);
   } catch (error) {
@@ -34,25 +34,37 @@ function fetchDataByZip(zip) {
     return;
   }
 
-  console.log(`📦 Rendering data for ZIP Code: ${zip}`, dataByZip[zip]);
+  // Introductory statement
+  const intro = document.createElement("p");
+  intro.innerHTML = `<strong>The following are information for water system(s) in the specified ZIP code:</strong>`;
+  container.appendChild(intro);
 
   dataByZip[zip].forEach(site => {
     const siteBox = document.createElement("div");
     siteBox.className = "site-box";
 
     const chemicals = Array.from({ length: 9 }, (_, i) => site[`CHEMICAL ${i + 1}`]).filter(Boolean);
+    const chemicalList = chemicals.length ? chemicals.join(", ") : "None";
 
     siteBox.innerHTML = `
-      <strong>SITE NAME:</strong> ${site["MAILINGNAME"]}<br/>
-      <strong>CHEMICALS PRESENT:</strong> ${chemicals.join(", ") || "None"}<br/>
-      <strong>MICROBIOLOGY STATUS:</strong> ${site["MICROBIOLOGY"] || "Not reported"}<br/><br/>
-      
+      <strong>SITE NAME:</strong> ${site["MAILINGNAME"]}<br/><br/>
+
       <strong>SITE CONTACT</strong><br/>
       <strong>ADDRESS:</strong> ${site["ADDRESS1"]}<br/>
       <strong>CITY:</strong> ${site["CITY"]}<br/>
       <strong>EMAIL:</strong> ${site["EMAIL"]}<br/>
-      <strong>PHONE NUMBER:</strong> ${site["PHONE"]}<br/>
+      <strong>PHONE NUMBER:</strong> ${site["PHONE"]}<br/><br/>
+
+      <em>THE FOLLOWING WATER CONTAMINANTS WERE PRESENT DURING TESTING OF THE SITE IN THE YEAR 2023</em><br/>
+      <strong>CHEMICALS PRESENT:</strong> ${chemicalList}<br/>
+      <strong>MICROBIOLOGY STATUS:</strong> ${site["MICROBIOLOGY"] || "Not reported"}<br/><br/>
+
+      <em>Note:</em> The presence of chemicals should not scare you. In some instances, the detected level is below the lethal level. 
+      However, it is important to take necessary precaution and contact the specific water system and the 
+      <a href="https://floridadep.gov/" target="_blank" rel="noopener noreferrer">Florida Department of Environmental Protection</a> 
+      for current data and mitigation measures that have been put in place to minimize risk.
     `;
+
     container.appendChild(siteBox);
   });
 }
